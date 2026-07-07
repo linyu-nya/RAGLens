@@ -1,52 +1,52 @@
 # RAGLens
 
-[中文文档](README.zh-CN.md)
+[English README](README.md)
 
-RAGLens is a local RAG debugging workbench. It provides document upload, chunking, embedding indexing, vector retrieval, RAG asking, and trace inspection.
+RAGLens 是一个本地 RAG 调试工作台，用于完成文档上传、文本切分、Embedding 索引、向量检索、RAG 问答和 Trace 查看。
 
-## Stack
+## 技术栈
 
-- Backend: Go, pgx, PostgreSQL, pgvector
-- Frontend: React, Vite, TanStack Query, TanStack Router, CodeMirror
-- Database: PostgreSQL 16 with pgvector
+- 后端：Go、pgx、PostgreSQL、pgvector
+- 前端：React、Vite、TanStack Query、TanStack Router、CodeMirror
+- 数据库：PostgreSQL 16 + pgvector
 
-## Requirements
+## 环境要求
 
 - Go 1.26+
 - Node.js 20+
-- Docker Engine with Docker Compose
-- goose for database migrations
-- An OpenAI-compatible model API key
+- Docker Engine 和 Docker Compose
+- goose，用于执行数据库迁移
+- OpenAI-compatible 模型 API Key
 
-## Start PostgreSQL
+## 启动 PostgreSQL
 
 ```bash
 docker compose up -d postgres
 docker compose ps
 ```
 
-The default database URL is:
+默认数据库连接：
 
 ```text
 postgres://raglens:raglens@localhost:5432/raglens?sslmode=disable
 ```
 
-## Run Migrations
+## 执行数据库迁移
 
 ```bash
 cd raglens-server
 goose -dir migrations postgres "postgres://raglens:raglens@localhost:5432/raglens?sslmode=disable" up
 ```
 
-## Configure Models
+## 配置模型
 
-OpenAI-compatible defaults:
+OpenAI-compatible 默认配置只需要设置 API Key：
 
 ```powershell
 $env:RAGLENS_OPENAI_API_KEY='<your-api-key>'
 ```
 
-Example for GLM / BigModel:
+使用 GLM / BigModel 的示例：
 
 ```powershell
 $env:RAGLENS_OPENAI_BASE_URL='https://open.bigmodel.cn/api/paas/v4'
@@ -56,27 +56,27 @@ $env:RAGLENS_EMBEDDING_MODEL='embedding-3'
 $env:RAGLENS_EMBEDDING_DIMENSIONS='2048'
 ```
 
-Other optional backend settings:
+其他可选后端配置：
 
 ```powershell
 $env:RAGLENS_SERVER_ADDR=':8080'
 $env:RAGLENS_DATABASE_URL='postgres://raglens:raglens@localhost:5432/raglens?sslmode=disable'
 ```
 
-## Run Backend
+## 启动后端
 
 ```bash
 cd raglens-server
 go run ./cmd/raglens-server
 ```
 
-Health check:
+健康检查：
 
 ```bash
 curl http://localhost:8080/healthz
 ```
 
-## Run Frontend
+## 启动前端
 
 ```bash
 cd raglens-web
@@ -84,31 +84,31 @@ npm ci
 npm run dev
 ```
 
-Open:
+浏览器打开：
 
 ```text
 http://127.0.0.1:5173
 ```
 
-The Vite dev server proxies `/api` and `/healthz` to `http://localhost:8080`.
+Vite 开发服务器会把 `/api` 和 `/healthz` 代理到 `http://localhost:8080`。
 
-## Frontend Routes
+## 前端页面
 
-- `/` overview
-- `/documents` upload documents, inspect chunks, and index embeddings
-- `/ask` run retrieval search and RAG ask
-- `/traces` inspect RAG traces, prompts, steps, and retrieved chunks
+- `/`：总览
+- `/documents`：上传文档、查看 chunks、写入 embedding
+- `/ask`：检索调试和 RAG Ask
+- `/traces`：查看 RAG trace、prompt、steps 和 retrieved chunks
 
-## Build
+## 构建
 
-Backend:
+后端：
 
 ```bash
 cd raglens-server
 go build ./cmd/raglens-server
 ```
 
-Frontend:
+前端：
 
 ```bash
 cd raglens-web
@@ -116,9 +116,9 @@ npm ci
 npm run build
 ```
 
-The frontend build output is written to `raglens-web/dist`.
+前端构建产物会输出到 `raglens-web/dist`。
 
-## API Summary
+## API 摘要
 
 - `GET /healthz`
 - `POST /api/documents/upload`
