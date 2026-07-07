@@ -1,0 +1,15 @@
+app:
+  environment: local
+
+server:
+  addr: ":8080"
+
+database:
+  url: "postgres://raglens:raglens@localhost:5432/raglens?sslmode=disable"
+
+models:
+  openai_base_url: "https://api.openai.com/v1"
+  openai_api_key: "${RAGLENS_OPENAI_API_KEY}"
+  chat_model: "gpt-4o-mini"
+  embedding_model: "text-embedding-3-small"
+  embedding_dimensions: 1536

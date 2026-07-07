@@ -1,0 +1,20 @@
+.env
+.env.*
+!.env.example
+
+# Go
+*.exe
+*.test
+*.out
+raglens-server/.cache/
+
+# Node / Vite
+raglens-web/node_modules/
+raglens-web/dist/
+raglens-web/.run-logs/
+raglens-web/*.tsbuildinfo
+raglens-web/vite.config.js
+raglens-web/vite.config.d.ts
+
+# Local caches
+.cache/

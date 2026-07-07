@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: raglens-postgres
+    environment:
+      POSTGRES_DB: raglens
+      POSTGRES_USER: raglens
+      POSTGRES_PASSWORD: raglens
+    ports:
+      - "5432:5432"
+    volumes:
+      - raglens-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U raglens -d raglens"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+volumes:
+  raglens-postgres-data:
