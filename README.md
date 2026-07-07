@@ -15,55 +15,80 @@ RAGLens is a local RAG debugging workbench. It provides document upload, chunkin
 - Go 1.26+
 - Node.js 20+
 - Docker Engine with Docker Compose
-- goose for database migrations
 - An OpenAI-compatible model API key
 
-## Start PostgreSQL
+## Quick Start
+
+Create a local environment file:
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` and set `RAGLENS_OPENAI_API_KEY`. Then run:
+
+```bash
+npm install
+npm run dev
+```
+
+`npm run dev` will:
+
+- start PostgreSQL with Docker Compose
+- wait for the database port
+- run database migrations through goose
+- start the Go backend on `http://localhost:8080`
+- start the Vite frontend on `http://127.0.0.1:5173`
+
+Open the app:
+
+```text
+http://127.0.0.1:5173
+```
+
+If your Docker Engine is inside WSL, run the commands from WSL in this project directory.
+
+## Model Configuration
+
+OpenAI-compatible default:
+
+```dotenv
+RAGLENS_OPENAI_API_KEY=<your-api-key>
+```
+
+Example for GLM / BigModel:
+
+```dotenv
+RAGLENS_OPENAI_BASE_URL=https://open.bigmodel.cn/api/paas/v4
+RAGLENS_OPENAI_API_KEY=<your-api-key>
+RAGLENS_CHAT_MODEL=<your-chat-model>
+RAGLENS_EMBEDDING_MODEL=embedding-3
+RAGLENS_EMBEDDING_DIMENSIONS=2048
+```
+
+Other optional backend settings:
+
+```dotenv
+RAGLENS_SERVER_ADDR=:8080
+RAGLENS_DATABASE_URL=postgres://raglens:raglens@localhost:5432/raglens?sslmode=disable
+```
+
+## Manual Commands
+
+Start PostgreSQL:
 
 ```bash
 docker compose up -d postgres
 docker compose ps
 ```
 
-The default database URL is:
-
-```text
-postgres://raglens:raglens@localhost:5432/raglens?sslmode=disable
-```
-
-## Run Migrations
+Run migrations:
 
 ```bash
-cd raglens-server
-goose -dir migrations postgres "postgres://raglens:raglens@localhost:5432/raglens?sslmode=disable" up
+npm run db:migrate
 ```
 
-## Configure Models
-
-OpenAI-compatible defaults:
-
-```powershell
-$env:RAGLENS_OPENAI_API_KEY='<your-api-key>'
-```
-
-Example for GLM / BigModel:
-
-```powershell
-$env:RAGLENS_OPENAI_BASE_URL='https://open.bigmodel.cn/api/paas/v4'
-$env:RAGLENS_OPENAI_API_KEY='<your-api-key>'
-$env:RAGLENS_CHAT_MODEL='<your-chat-model>'
-$env:RAGLENS_EMBEDDING_MODEL='embedding-3'
-$env:RAGLENS_EMBEDDING_DIMENSIONS='2048'
-```
-
-Other optional backend settings:
-
-```powershell
-$env:RAGLENS_SERVER_ADDR=':8080'
-$env:RAGLENS_DATABASE_URL='postgres://raglens:raglens@localhost:5432/raglens?sslmode=disable'
-```
-
-## Run Backend
+Run backend only:
 
 ```bash
 cd raglens-server
@@ -76,18 +101,10 @@ Health check:
 curl http://localhost:8080/healthz
 ```
 
-## Run Frontend
+Run frontend only:
 
 ```bash
-cd raglens-web
-npm ci
-npm run dev
-```
-
-Open:
-
-```text
-http://127.0.0.1:5173
+npm run dev --workspace raglens-web
 ```
 
 The Vite dev server proxies `/api` and `/healthz` to `http://localhost:8080`.
@@ -104,15 +121,18 @@ The Vite dev server proxies `/api` and `/healthz` to `http://localhost:8080`.
 Backend:
 
 ```bash
-cd raglens-server
-go build ./cmd/raglens-server
+npm run build:server
 ```
 
 Frontend:
 
 ```bash
-cd raglens-web
-npm ci
+npm run build:web
+```
+
+Both:
+
+```bash
 npm run build
 ```
 
